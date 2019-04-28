@@ -20,6 +20,22 @@ Then install the application:
     
     $ pip install -e .
     
+And the development/testing requirements:
+
+.. code:: console
+    
+    $ pip install -r requirements.txt
+    
+Running The Tests
+=================
+Tests are written with `pytest <https://docs.pytest.org/en/latest/>`__.
+
+They can be invoked like this:
+
+.. code:: console
+    
+    $ pytest src
+    
 
 Initializing The Database And Populating It With Some Quotes
 ============================================================
