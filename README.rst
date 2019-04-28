@@ -49,3 +49,15 @@ From a python prompt run:
     >>> util.init("test.db")
     >>> util.ingest("quotes.txt", "test.db")
     
+    
+Running The Application
+=======================
+In :code:`requirements.txt`, `Gunicorn <https://gunicorn.org/>`__ is provided. There is also an example :code:`wsgi.py` file showing how to invoke the :code:`RandomQuoteApp` for use by Gunicorn. 
+
+A basic web instance can be launched like this:
+
+.. code:: console
+    
+    $ gunicorn wsgi:app
+    
+The web server will be available at http://127.0.0.1:8000.

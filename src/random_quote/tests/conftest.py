@@ -1,6 +1,7 @@
 from random_quote import manager, wsgi, util
 
 import pytest
+from webtest import TestApp
 
 @pytest.fixture
 def preconfigured_manager():
@@ -21,3 +22,13 @@ def preconfigured_manager():
     yield rqm
     
     rqm.conn.close()
+    
+@pytest.fixture
+def preconfigured_wsgi_app(preconfigured_manager):
+    """
+    Create an instance of RandomQuoteApp, with a preconfigured RandomQuoteManager,
+    wrapped in a TestApp instance, ready for functional testing.
+    """
+    app = TestApp(wsgi.RandomQuoteApp(preconfigured_manager))
+    
+    yield app

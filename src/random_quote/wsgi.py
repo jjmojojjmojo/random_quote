@@ -1,11 +1,19 @@
 """
 WSGI Applications
 """
+from . import manager
 from webob import Request, Response
+from webob.exc import HTTPError, HTTPNotFound, HTTPMethodNotAllowed, HTTPBadRequest
+import re
 
 class RandomQuoteApp:
-    def __init__(self, db_file=None):
-        pass
+    def __init__(self, db_file_or_manager):
+        if isinstance(db_file_or_manager, manager.RandomQuoteManager):
+            self.manager = db_file_or_manager
+        elif isinstance(db_file_or_manager, str):
+            self.manager = manager.RandomQuoteManager(db_file_or_manager)
+        else:
+            raise ValueError("A string file path or manager object must be provided")
     
     def __call__(self, environ, start_response):
         """
@@ -17,6 +25,21 @@ class RandomQuoteApp:
         Expects each method to return a webob.Response object, which will be 
         invoked and returned as per the WSGI protocol.
         """
+        request = Request(environ)
+        
+        try:
+            if request.path == "/quotes":
+                response = self.listing(request)
+            elif request.path.startswith("/quote"):
+                response = self.get(request)
+            elif request.path == "/random":
+                response = self.random(request)
+            else: 
+                raise HTTPNotFound()
+                
+            return response(environ, start_response)
+        except HTTPError as error_response:
+            return error_response(environ, start_response)
     
     def get(self, request):
         """
@@ -28,15 +51,46 @@ class RandomQuoteApp:
             
         
         """
+        match = re.search("/([^/]+)$", request.path)
+        
+        if not match:
+            raise HTTPNotFound()
+            
+        quote = self.manager.get(match.group(1))
+        
+        if not quote:
+            raise HTTPNotFound()
+        
+        response = Response()
+        
+        response.json = quote
+        
+        response.content_type = "application/json"
+        
+        return response
         
     def random(self, request):
         """
         Return a webob.Response object with a JSON payload containing a quote
         chosen at random.
         """
+        response = Response()
+        
+        response.json = self.manager.random()
+        
+        response.content_type = "application/json"
+        
+        return response
         
     def listing(self, request):
         """
         Return a webob.Response object with a JSON payload containing an array
         of all quote objects in the database
         """
+        response = Response()
+        
+        response.json = self.manager.all()
+        
+        response.content_type = "application/json"
+        
+        return response
