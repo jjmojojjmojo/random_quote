@@ -3,8 +3,6 @@ Functional tests of the WSGI application.
 """
 
 import pytest
-import datetime
-
 
 def test_get_quote(preconfigured_wsgi_app):
     """
