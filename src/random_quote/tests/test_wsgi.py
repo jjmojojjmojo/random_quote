@@ -46,17 +46,6 @@ def test_all_quotes(preconfigured_wsgi_app):
     assert quotes[19]["id"] == 20
     assert quotes[19]["quote"] == 'Generic Quote 20'
     
-def test_random_quote(preconfigured_wsgi_app):
-    """
-    Make a GET request for a single random quote
-    """
-    response = preconfigured_wsgi_app.get("/random")
-    
-    assert response.status == '200 OK'
-    
-    quote = response.json
-    
-    assert quote["id"] == 12
     
 def test_get_quote_unknown_id(preconfigured_wsgi_app):
     """

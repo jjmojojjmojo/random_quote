@@ -29,8 +29,8 @@ class QuoteGenerator:
         
         see: generate_authors.py, build_markov_chain.py
         """
-        self.chars_per_sentence = (100, 500)
-        self.max_sentences = 5
+        self.chars_per_sentence = (50, 200)
+        self.max_sentences = 3
         
         self.text_model = markovify.Text.from_json(chainfile.read())
         
@@ -49,7 +49,7 @@ class QuoteGenerator:
         sentences = random.randrange(1, self.max_sentences+1)
         for i in range(sentences):
             max_chars = random.randint(self.chars_per_sentence[0], self.chars_per_sentence[1])
-            sentence = self.text_model.make_short_sentence(min_chars=50, max_chars=max_chars)
+            sentence = self.text_model.make_short_sentence(min_chars=25, max_chars=max_chars)
             if sentence:
                 quote.append(sentence)
             else:
