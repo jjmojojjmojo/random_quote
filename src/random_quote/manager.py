@@ -2,21 +2,32 @@
 API code for dealing with the quote database.
 """
 
-import sqlite3
+import datetime
+import random
+
+RAND_MIN = -9223372036854775808
+RAND_MAX = 9223372036854775807
 
 class RandomQuoteManager:
-    def __init__(self, db_filename):
-        self.db_filemame = db_filename
-        self.conn = sqlite3.connect(db_filename)
-        self.conn.row_factory = sqlite3.Row
-    
-    def add(self, quote):
+    def __init__(self, conn):
+        self.conn = conn
+        
+    def _rand(self):
+        """
+        Return a random integer between RAND_MIN and RAND_MAX (simulates 
+        the random() function in sqlite)
+        """
+        return random.randint(RAND_MIN, RAND_MAX)
+        
+    def add(self, quote, author="Unknown"):
         """
         Add a quote to the database. Returns the quote's ID.
         """
         c = self.conn.cursor()
         
-        c.execute("INSERT INTO quotes (quote) VALUES (?)", (quote,))
+        c.execute(
+            "INSERT INTO quotes (author, quote, rand) VALUES (?, ?, ?)", 
+            (author, quote, self._rand()))
         
         self.conn.commit()
         
@@ -30,11 +41,14 @@ class RandomQuoteManager:
         """
         c = self.conn.cursor()
         
-        c.execute("SELECT rowid, quote, created FROM quotes WHERE rowid=?", (id_,))
+        c.execute("SELECT id, author, quote, created FROM quotes WHERE id = ?", (id_,))
         
-        quote = dict(c.fetchone())
+        result = c.fetchone()
         
-        return quote
+        if result is None:
+            return None
+        else:
+            return dict(result)
         
     def remove(self, id_):
         """
@@ -42,7 +56,7 @@ class RandomQuoteManager:
         """
         c = self.conn.cursor()
         
-        c.execute("DELETE FROM quotes WHERE rowid=?", (id_,))
+        c.execute("DELETE FROM quotes WHERE id=?", (id_,))
         
         self.conn.commit()
         
@@ -51,12 +65,16 @@ class RandomQuoteManager:
         Return a random quote from the database.
         """
         c = self.conn.cursor()
+        rand = self._rand()
         
-        c.execute("SELECT rowid, quote, created FROM quotes ORDER BY random() LIMIT 1")
+        c.execute("SELECT id, author, quote, created FROM quotes ORDER BY ABS(rand - ?) LIMIT 1", (rand,))
         
-        quote = dict(c.fetchone())
+        result = c.fetchone()
         
-        return quote
+        if result is None:
+            return None
+        else:
+            return dict(result)
         
     def all(self):
         """
@@ -64,7 +82,7 @@ class RandomQuoteManager:
         """
         c = self.conn.cursor()
         
-        c.execute("SELECT rowid, quote, created FROM quotes")
+        c.execute("SELECT id, author, quote, created FROM quotes")
         
         result = []
         

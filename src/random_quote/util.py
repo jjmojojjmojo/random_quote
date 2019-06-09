@@ -3,48 +3,47 @@ Utility functions.
 """
 import os
 import sqlite3
+import csv
 
-def ingest(filename, db_filename):
+def connection_factory(db_filename):
+    connection = sqlite3.connect(db_filename)
+    connection.row_factory = sqlite3.Row
+    
+    return connection
+
+def schema():
+    """
+    Return the location of the SQL schema.
+    """
+    return os.path.join(os.path.dirname(__file__), "schema.sql")
+
+
+def ingest(csvfile, db_connection):
     """
     Read a file of quotes and populate the database.
     """
-    conn = sqlite3.connect(db_filename)
+    c = db_connection.cursor()
     
-    c = conn.cursor()
-    
-    with open(filename, "r") as quotes:
-        for line in quotes:
-            c.execute("INSERT INTO quotes (quote) VALUES (?)", (line,))
+    with open(csvfile, "r", newline="") as quotes:
+        reader = csv.DictReader(quotes)
+        
+        for row in reader:
+            c.execute(
+                "INSERT INTO quotes (quote, author) VALUES (?, ?)", 
+                (row['quote'], row['author']))
             
-    conn.commit()
-    
-    conn.close()
+    db_connection.commit()
     
     
-def init_with_connection(conn):
-    """
-    Initialize the database with a given sqlite3 connection object. 
-    
-    This is broken out to facilitate easier testing - we can initialize the
-    database in a test fixture using a single connection.
-    """
-    c = conn.cursor()
-    
-    schema_path = os.path.join(os.path.dirname(__file__), "schema.sql")
-    
-    with open(schema_path, "r") as schema_fp:
-        queries = schema_fp.read()
-        
-        c.execute(queries)
-        
-    conn.commit()
-    
-def init(db_filename):
+def init(db_connection):
     """
     Create the database schema.
     """
-    conn = sqlite3.connect(db_filename)
+    c = db_connection.cursor()
     
-    init_with_connection(conn)
+    with open(schema(), "r") as schema_fp:
+        queries = schema_fp.read()
         
-    conn.close()
+        c.executescript(queries)
+        
+    db_connection.commit()

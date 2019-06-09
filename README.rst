@@ -2,7 +2,7 @@
 random_quote
 ============
 
-A simple (but not trivial) example application for a blog post about branching and tests
+A simple (but not trivial) example application for a blog post about git branching and writing tests with pytest.
 
 Basic Setup
 ===========
@@ -39,15 +39,31 @@ They can be invoked like this:
 
 Initializing The Database And Populating It With Some Quotes
 ============================================================
-Assuming you have a text file called :code:`quotes.txt` with one quote per line, and you want to save your data in :code:`test.db`.
+First you will need a CSV file containing quotes and author names. Call it :code:`quotes.csv`.
+
+You can create your own if you'd like. Ensure the first row contains the column names:
+
+.. code:: text
+    
+    quote,author
+    "When I get a little money I buy books; and if any is left, I buy food and clothes.", "Erasmus"
+    "Various disguises are regrettable but necessary, If you’re going to make it through the day.", "NoMeansNo"
+    
+But a script is provided that will generate many (defaults to 1000):
+
+.. code:: console
+    
+    $ python scripts/generate_quotes.py
+    
 
 From a python prompt run:
 
 .. code:: pycon
     
     >>> from random_quote import util
-    >>> util.init("test.db")
-    >>> util.ingest("quotes.txt", "test.db")
+    >>> conn = util.connection_factory("test.db")
+    >>> util.init(conn)
+    >>> util.ingest("quotes.csv", conn)
     
     
 Running The Application

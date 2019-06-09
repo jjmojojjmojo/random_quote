@@ -2,18 +2,14 @@
 WSGI Applications
 """
 from . import manager
+from .util import connection_factory
 from webob import Request, Response
 from webob.exc import HTTPError, HTTPNotFound, HTTPMethodNotAllowed, HTTPBadRequest
 import re
 
 class RandomQuoteApp:
-    def __init__(self, db_file_or_manager):
-        if isinstance(db_file_or_manager, manager.RandomQuoteManager):
-            self.manager = db_file_or_manager
-        elif isinstance(db_file_or_manager, str):
-            self.manager = manager.RandomQuoteManager(db_file_or_manager)
-        else:
-            raise ValueError("A string file path or manager object must be provided")
+    def __init__(self, db_connection):
+        self.manager = manager.RandomQuoteManager(db_connection)
     
     def __call__(self, environ, start_response):
         """
