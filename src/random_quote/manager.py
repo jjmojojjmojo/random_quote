@@ -45,10 +45,7 @@ class RandomQuoteManager:
         
         result = c.fetchone()
         
-        if result is None:
-            return None
-        else:
-            return dict(result)
+        return dict(result)
         
     def remove(self, id_):
         """
@@ -71,10 +68,7 @@ class RandomQuoteManager:
         
         result = c.fetchone()
         
-        if result is None:
-            return None
-        else:
-            return dict(result)
+        return dict(result)
         
     def all(self):
         """

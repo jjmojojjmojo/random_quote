@@ -54,11 +54,3 @@ def test_all(preconfigured_manager):
     
     assert quotes[19]["id"] == 20
     assert quotes[19]["quote"] == 'Generic Quote 20'
-    
-def test_unknown_id(preconfigured_manager):
-    """
-    Try to get a quote by an unknown id.
-    """
-    quote = preconfigured_manager.get("zzzzz")
-
-    assert quote is None

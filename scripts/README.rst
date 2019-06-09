@@ -86,6 +86,8 @@ Assuming you have this repository checked out with :code:`--bare`, you can use t
 
 It uses :code:`init_workspace_db.py` to create the database schema and ingest the generated quotes.
 
+Finally, it runs the unit tests.
+
 Data Sources
 ============
 
