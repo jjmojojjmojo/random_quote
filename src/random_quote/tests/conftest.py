@@ -2,6 +2,7 @@ from random_quote import manager, wsgi, util
 
 import pytest
 from webtest import TestApp
+import random
 
 @pytest.fixture
 def preconfigured_manager():
