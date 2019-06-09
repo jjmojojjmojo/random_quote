@@ -3,7 +3,7 @@ Helper Scripts And Other Random Utilities
 =========================================
 
 This directory contains tools used to generate the ../quotes.csv file in the
-parent directory.
+parent directory, and a few helper scripts used for developing the guide that utilizes this repo.
 
 The tools use a mix of random selection and a `Markov chain <https://en.wikipedia.org/wiki/Markov_chain>`__ to make realistic-looking data. They use the `markovify <https://github.com/jsvine/markovify>`__ library.
 
@@ -79,6 +79,12 @@ After enabling the virtual environment and installing dependencies, run:
     (random_quote) $ python scripts/generate_authors.py
     
 This will overwrite the :code:`authors.json` file in this directory. See `Data Sources`_ for details about where the names came from.
+
+Bootstrapping A Clone
+=====================
+Assuming you have this repository checked out with :code:`--bare`, you can use the :code:`init_workspace.sh` script to simulate all of the first few steps from the guide: cloning a working copy, initializing the virtual environment, installing everything and generating :code:`quotes.csv`.
+
+It uses :code:`init_workspace_db.py` to create the database schema and ingest the generated quotes.
 
 Data Sources
 ============
