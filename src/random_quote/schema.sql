@@ -6,4 +6,4 @@ CREATE TABLE IF NOT EXISTS quotes (
 	rand INTEGER DEFAULT (random())
 );
 
-CREATE INDEX quotes_rand ON quotes (rand);
+CREATE INDEX IF NOT EXISTS quotes_rand ON quotes (rand);
