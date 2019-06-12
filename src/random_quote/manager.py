@@ -4,13 +4,14 @@ API code for dealing with the quote database.
 
 import datetime
 import random
+from . import util
 
 RAND_MIN = -9223372036854775808
 RAND_MAX = 9223372036854775807
 
 class RandomQuoteManager:
-    def __init__(self, conn):
-        self.conn = conn
+    def __init__(self, db_filename):
+        self.conn = util.connection(db_filename)
         
     def _rand(self):
         """

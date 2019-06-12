@@ -1,3 +1,3 @@
-from random_quote import wsgi, util
+from random_quote import wsgi
 
-app = wsgi.RandomQuoteApp(util.connection_factory("test.db"))
+app = wsgi.RandomQuoteApp("test.db")

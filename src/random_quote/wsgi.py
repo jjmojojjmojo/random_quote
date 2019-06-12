@@ -2,14 +2,13 @@
 WSGI Applications
 """
 from . import manager
-from .util import connection_factory
 from webob import Request, Response
 from webob.exc import HTTPError, HTTPNotFound, HTTPMethodNotAllowed, HTTPBadRequest
 import re
 
 class RandomQuoteApp:
-    def __init__(self, db_connection):
-        self.manager = manager.RandomQuoteManager(db_connection)
+    def __init__(self, db_filename):
+        self.manager = manager.RandomQuoteManager(db_filename)
     
     def __call__(self, environ, start_response):
         """
