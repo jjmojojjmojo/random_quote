@@ -53,9 +53,6 @@ class RandomQuoteApp:
             
         quote = self.manager.get(match.group(1))
         
-        if not quote:
-            raise HTTPNotFound()
-        
         response = Response()
         
         response.json = quote

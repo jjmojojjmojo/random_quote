@@ -15,7 +15,7 @@ def temp_db():
 @pytest.fixture
 def preconfigured_manager(temp_db):
     """
-    Create a RandomQuoteManager, and initialize an in-memory database.
+    Create a RandomQuoteManager, and initialize the database.
     """
     rqm = manager.RandomQuoteManager(temp_db)
     
@@ -42,3 +42,5 @@ def preconfigured_wsgi_app(temp_db, preconfigured_manager):
     app = TestApp(wsgi.RandomQuoteApp(temp_db))
     
     yield app
+    
+    app.app.manager.conn.close()
