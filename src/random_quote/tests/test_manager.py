@@ -63,3 +63,11 @@ def test_random_quote(preconfigured_manager):
     quote = preconfigured_manager.random()
     
     assert quote["id"] == 12
+    
+def test_unknown_id(preconfigured_manager):
+    """
+    Try to get a quote by an unknown id.
+    """
+    quote = preconfigured_manager.get("zzzzz")
+    
+    assert quote is None
