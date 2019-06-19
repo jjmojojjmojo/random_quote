@@ -63,3 +63,10 @@ def test_get_quote_unknown_id(preconfigured_wsgi_app):
     response = preconfigured_wsgi_app.get("/quote/zzzzzz", status=404)
     
     assert response.status == '404 Not Found'
+    
+def test_get_root(preconfigured_wsgi_app):
+    """
+    Make a GET request for the root path.
+    """
+    response = preconfigured_wsgi_app.get("/")
+    assert response.content_type == 'text/html'
