@@ -55,3 +55,11 @@ def test_random_quote(preconfigured_wsgi_app):
     quote = response.json
     
     assert quote["id"] == 12
+    
+def test_get_quote_unknown_id(preconfigured_wsgi_app):
+    """
+    Make a GET request for a single pre-existing quote, but the id doesn't exist.
+    """
+    response = preconfigured_wsgi_app.get("/quote/zzzzzz", status=404)
+    
+    assert response.status == '404 Not Found'
