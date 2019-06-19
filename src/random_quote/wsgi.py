@@ -2,8 +2,10 @@
 WSGI Applications
 """
 from . import manager
+from . import util
 from webob import Request, Response
 from webob.exc import HTTPError, HTTPNotFound, HTTPMethodNotAllowed, HTTPBadRequest
+from webob.static import FileApp
 import re
 
 class RandomQuoteApp:
@@ -23,7 +25,9 @@ class RandomQuoteApp:
         request = Request(environ)
         
         try:
-            if request.path == "/quotes":
+            if request.path == "/":
+                response = FileApp(util.static("index.html"))
+            elif request.path == "/quotes":
                 response = self.listing(request)
             elif request.path.startswith("/quote"):
                 response = self.get(request)
