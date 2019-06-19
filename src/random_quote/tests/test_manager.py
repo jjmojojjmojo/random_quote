@@ -54,3 +54,12 @@ def test_all(preconfigured_manager):
     
     assert quotes[19]["id"] == 20
     assert quotes[19]["quote"] == 'Generic Quote 20'
+    
+def test_random_quote(preconfigured_manager):
+    """
+    Retrieve a random quote.
+    """
+    
+    quote = preconfigured_manager.random()
+    
+    assert quote["id"] == 12

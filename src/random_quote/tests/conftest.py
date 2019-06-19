@@ -7,13 +7,19 @@ import tempfile
 import os
 
 @pytest.fixture
+def fix_random():
+    random.seed(1)
+    yield
+    random.seed()
+
+@pytest.fixture
 def temp_db():
     filehandle, path = tempfile.mkstemp(prefix="random_quote_")
     yield path
     os.unlink(path)
 
 @pytest.fixture
-def preconfigured_manager(temp_db):
+def preconfigured_manager(temp_db, fix_random):
     """
     Create a RandomQuoteManager, and initialize the database.
     """
