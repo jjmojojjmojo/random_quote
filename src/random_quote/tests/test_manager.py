@@ -71,3 +71,11 @@ def test_unknown_id(preconfigured_manager):
     quote = preconfigured_manager.get("zzzzz")
     
     assert quote is None
+    
+def test_qotd(preconfigured_manager):
+    """
+    Ensure the qotd property exists.
+    """
+    from random_quote.qotd import QuoteOfTheDay
+
+    assert isinstance(preconfigured_manager.qotd, QuoteOfTheDay)
