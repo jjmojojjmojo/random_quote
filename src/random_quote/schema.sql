@@ -7,3 +7,12 @@ CREATE TABLE IF NOT EXISTS quotes (
 );
 
 CREATE INDEX IF NOT EXISTS quotes_rand ON quotes (rand);
+
+CREATE TABLE IF NOT EXISTS quote_of_the_day (
+    quote_id INTEGER NOT NULL,
+    day INTEGER NOT NULL,
+    month INTEGER NOT NULL,
+    year INTEGER NOT NULL,
+    FOREIGN KEY(quote_id) REFERENCES quotes(id)
+    UNIQUE(day, month, year)
+);

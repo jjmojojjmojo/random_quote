@@ -5,13 +5,18 @@ API code for dealing with the quote database.
 import datetime
 import random
 from . import util
+from .qotd import QuoteOfTheDay
 
 RAND_MIN = -9223372036854775808
 RAND_MAX = 9223372036854775807
 
 class RandomQuoteManager:
-    def __init__(self, db_filename):
+    def __init__(self, db_filename, qotd=None):
         self.conn = util.connection(db_filename)
+        if qotd is None:
+            self.qotd = QuoteOfTheDay(db_filename, self)
+        else:
+            self.qotd = qotd
         
     def _rand(self):
         """
