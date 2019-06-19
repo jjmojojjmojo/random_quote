@@ -23,7 +23,11 @@ class RandomQuoteApp:
         request = Request(environ)
         
         try:
-            if request.path == "/quotes":
+            if request.path == "/":
+                response = self.qotd(request)
+            elif request.path == "/qotd":
+                response = self.qotd_listing(request)
+            elif request.path == "/quotes":
                 response = self.listing(request)
             elif request.path.startswith("/quote"):
                 response = self.get(request)
@@ -86,6 +90,28 @@ class RandomQuoteApp:
         
         response.json = self.manager.all()
         
+        response.content_type = "application/json"
+        
+        return response
+        
+    def qotd(self, request):
+        """
+        Return today's quote of the day.
+        """
+        response = Response()
+        
+        response.json = self.manager.qotd.get()
+        response.content_type = "application/json"
+        
+        return response
+    
+    def qotd_listing(self, request):
+        """
+        List all existing quotes of the day.
+        """
+        response = Response()
+        
+        response.json = self.manager.qotd.all()
         response.content_type = "application/json"
         
         return response

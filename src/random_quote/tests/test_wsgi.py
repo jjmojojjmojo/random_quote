@@ -3,6 +3,7 @@ Functional tests of the WSGI application.
 """
 
 import pytest
+import datetime
 
 def test_get_quote(preconfigured_wsgi_app):
     """
@@ -63,3 +64,42 @@ def test_get_quote_unknown_id(preconfigured_wsgi_app):
     response = preconfigured_wsgi_app.get("/quote/zzzzzz", status=404)
     
     assert response.status == '404 Not Found'
+    
+def test_get_root(preconfigured_wsgi_app):
+    """
+    Make a GET request for /
+    """
+    response = preconfigured_wsgi_app.get("/")
+
+    json_quote = response.json
+
+    today = datetime.datetime.now()
+    quote = preconfigured_wsgi_app.app.manager.qotd.get(today)
+
+    assert json_quote == quote
+
+def test_qotd_empty(preconfigured_wsgi_app):
+    """
+    Request the list of quotes of the day at /qotd - no existing quotes
+    """
+    response = preconfigured_wsgi_app.get("/qotd")
+
+    quotes = response.json
+
+    assert quotes == []
+
+def test_qotd(preconfigured_wsgi_app):
+    """
+    Request the list of quotes of the day at /qotd
+    """
+    today = datetime.datetime.now()
+    quote1 = preconfigured_wsgi_app.app.manager.qotd.get(today)
+    quote2 = preconfigured_wsgi_app.app.manager.qotd.get(datetime.datetime(year=2048, month=2, day=26))
+
+    response = preconfigured_wsgi_app.get("/qotd")
+
+    quotes = response.json
+
+    assert len(quotes) == 2
+    assert quotes[0] == quote1
+    assert quotes[1] == quote2
