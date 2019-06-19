@@ -46,7 +46,11 @@ class RandomQuoteManager:
         
         result = c.fetchone()
         
-        return dict(result)
+        if result is None:
+            return None
+        else:
+            return dict(result)
+        
         
     def remove(self, id_):
         """
