@@ -67,9 +67,42 @@ def test_get_quote_unknown_id(preconfigured_wsgi_app):
     
 def test_get_root(preconfigured_wsgi_app):
     """
-    Make a GET request for /
+    Make a GET request for the root path.
     """
     response = preconfigured_wsgi_app.get("/")
+    assert response.content_type == 'text/html'
+
+def test_qotd_empty(preconfigured_wsgi_app):
+    """
+    Request the list of quotes of the day at /qotd-history - no existing quotes
+    """
+    response = preconfigured_wsgi_app.get("/qotd-history")
+
+    quotes = response.json
+
+    assert quotes == []
+
+def test_qotd_listing(preconfigured_wsgi_app):
+    """
+    Request the list of quotes of the day at /qotd-history
+    """
+    today = datetime.datetime.now()
+    quote1 = preconfigured_wsgi_app.app.manager.qotd.get(today)
+    quote2 = preconfigured_wsgi_app.app.manager.qotd.get(datetime.datetime(year=2048, month=2, day=26))
+
+    response = preconfigured_wsgi_app.get("/qotd-history")
+
+    quotes = response.json
+
+    assert len(quotes) == 2
+    assert quotes[0] == quote1
+    assert quotes[1] == quote2
+
+def test_qotd(preconfigured_wsgi_app):
+    """
+    Retrieve the current quote of the day
+    """
+    response = preconfigured_wsgi_app.get("/qotd")
 
     json_quote = response.json
 
@@ -77,29 +110,48 @@ def test_get_root(preconfigured_wsgi_app):
     quote = preconfigured_wsgi_app.app.manager.qotd.get(today)
 
     assert json_quote == quote
+def test_get_root(preconfigured_wsgi_app):
+    """
+    Make a GET request for the root path.
+    """
+    response = preconfigured_wsgi_app.get("/")
+    assert response.content_type == 'text/html'
 
 def test_qotd_empty(preconfigured_wsgi_app):
     """
-    Request the list of quotes of the day at /qotd - no existing quotes
+    Request the list of quotes of the day at /qotd-history - no existing quotes
     """
-    response = preconfigured_wsgi_app.get("/qotd")
+    response = preconfigured_wsgi_app.get("/qotd-history")
 
     quotes = response.json
 
     assert quotes == []
 
-def test_qotd(preconfigured_wsgi_app):
+def test_qotd_listing(preconfigured_wsgi_app):
     """
-    Request the list of quotes of the day at /qotd
+    Request the list of quotes of the day at /qotd-history
     """
     today = datetime.datetime.now()
     quote1 = preconfigured_wsgi_app.app.manager.qotd.get(today)
     quote2 = preconfigured_wsgi_app.app.manager.qotd.get(datetime.datetime(year=2048, month=2, day=26))
 
-    response = preconfigured_wsgi_app.get("/qotd")
+    response = preconfigured_wsgi_app.get("/qotd-history")
 
     quotes = response.json
 
     assert len(quotes) == 2
     assert quotes[0] == quote1
     assert quotes[1] == quote2
+
+def test_qotd(preconfigured_wsgi_app):
+    """
+    Retrieve the current quote of the day
+    """
+    response = preconfigured_wsgi_app.get("/qotd")
+
+    json_quote = response.json
+
+    today = datetime.datetime.now()
+    quote = preconfigured_wsgi_app.app.manager.qotd.get(today)
+
+    assert json_quote == quote

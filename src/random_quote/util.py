@@ -54,3 +54,14 @@ def init(db_filename):
         c.executescript(queries)
         
     conn.commit()
+    
+def static(path=None):
+    """
+    Return the full path to a file the static directory.
+    """
+    static = os.path.join(os.path.dirname(__file__), "static")
+
+    if path:
+        return os.path.join(static, path)
+    else:
+        return static

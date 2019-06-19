@@ -2,8 +2,10 @@
 WSGI Applications
 """
 from . import manager
+from . import util
 from webob import Request, Response
 from webob.exc import HTTPError, HTTPNotFound, HTTPMethodNotAllowed, HTTPBadRequest
+from webob.static import FileApp
 import re
 
 class RandomQuoteApp:
@@ -24,8 +26,10 @@ class RandomQuoteApp:
         
         try:
             if request.path == "/":
-                response = self.qotd(request)
+                response = FileApp(util.static("index.html"))
             elif request.path == "/qotd":
+                response = self.qotd(request)
+            elif request.path == "/qotd-history":
                 response = self.qotd_listing(request)
             elif request.path == "/quotes":
                 response = self.listing(request)
@@ -33,9 +37,9 @@ class RandomQuoteApp:
                 response = self.get(request)
             elif request.path == "/random":
                 response = self.random(request)
-            else: 
+            else:
                 raise HTTPNotFound()
-                
+
             return response(environ, start_response)
         except HTTPError as error_response:
             return error_response(environ, start_response)
