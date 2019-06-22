@@ -2,7 +2,7 @@
 random_quote
 ============
 
-A simple (but not trivial) example application for a blog post about git branching and writing tests with pytest.
+A simple (but not trivial) example application for a `blog post about git branching and writing tests with pytest <https://jjmojojjmojo.github.io/branching-git-with-pytest.html>`__.
 
 Basic Setup
 ===========
@@ -77,3 +77,21 @@ A basic web instance can be launched like this:
     $ gunicorn wsgi:app
     
 The web server will be available at http://127.0.0.1:8000.
+
+Branches
+========
+To facilitate easier use of the guide that this application was written for, branches are provided in this repository that correspond to various points of progress: 
+
+:code:`part1`
+    All the changes from `part 1 <https://jjmojojjmojo.github.io/branching-git-with-pytest.html>`__.
+:code:`part2`
+    All the changes from `part 1 <https://jjmojojjmojo.github.io/branching-git-with-pytest.html>`__ and
+    `part 2 <https://jjmojojjmojo.github.io/branching-git-with-pytest-2.html>`__
+:code:`qotd`
+    Developer **A**'s feature from `part 3 <https://jjmojojjmojo.github.io/branching-git-with-pytest-3.html>`__.
+:code:`index-info`
+    Developer **B**'s bug fix from `part 3 <https://jjmojojjmojo.github.io/branching-git-with-pytest-3.html>`__.
+:code:`part3`
+    All the changes from `part 1 <https://jjmojojjmojo.github.io/branching-git-with-pytest.html>`__, 
+    `part 2 <https://jjmojojjmojo.github.io/branching-git-with-pytest-2.html>`__ *and* `part 3 <https://jjmojojjmojo.github.io/branching-git-with-pytest-3.html>`__!
+    
